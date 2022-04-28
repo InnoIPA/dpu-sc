@@ -1,0 +1,4 @@
+*.webm
+output/*
+unittest/__pycache__/
+mod/__pycache__/

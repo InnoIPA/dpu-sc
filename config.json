@@ -1,0 +1,78 @@
+{
+    "DISPLAY": {
+        "WIDTH": "1920",
+        "HEIGHT": "1080"
+    },
+    "MODLES": {
+        "XMODELS_CLASS": {
+            "TYPE": "cnn",
+            "MODEL": "models/cnn/customcnn.xmodel",
+            "CLASS": [
+                "dog",
+                "cat"
+            ],
+            "INPUT_SIZE": [
+                250,
+                200
+            ]
+        },
+        "XMODELS_OBJ": {
+            "TYPE": "yolo",
+            "MODEL": "models/obj/yolov3-voc.xmodel",
+            "CLASS": [
+                "aeroplane",
+                "bicycle",
+                "bird",
+                "boat",
+                "bottle",
+                "bus",
+                "car",
+                "cat",
+                "chair",
+                "cow",
+                "diningtable",
+                "dog",
+                "horse",
+                "motobike",
+                "person",
+                "pottedplant",
+                "sheep",
+                "sofa",
+                "train",
+                "tv"
+            ],
+            "ANCHORS": [
+                10,
+                13,
+                16,
+                30,
+                33,
+                23,
+                30,
+                61,
+                62,
+                45,
+                59,
+                119,
+                116,
+                90,
+                156,
+                198,
+                373,
+                326
+            ],
+            "INPUT_SIZE": [
+                416,
+                416
+            ],
+            "IOU": "0.213",
+            "NMS": "0.45",
+            "CONF": "0.2",
+            "BOX_MAX_NUM": "30"
+        }
+    },
+    "OUTPUT": {
+        "VIDEO_OUTPUT": "./output.mp4",
+        "IMAGE_OUT_DIR": "./"
+    }
+}

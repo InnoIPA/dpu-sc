@@ -1,0 +1,197 @@
+<!--
+ Copyright (c) 2022 Innodisk Crop.
+ 
+ This software is released under the MIT License.
+ https://opensource.org/licenses/MIT
+-->
+
+<?xml version="1.0" ?>
+<SettingsStruct>
+    <PersistType Value="2" Description="Persist all features except LUTs" />
+    <MaxIterations Value="5" Description="How often implementation shall try to write values to specific feature (due to complex feature dependencies, multiple write operations are sometimes necessary)" />
+    <Logging Status="On">
+        <LoggingFile Value="-" Description="Name and/or path for logging file" />
+        <LoggingLevel Value="4" Description="All messages will be logged (Info, Error, Warning, Debug, Trace)" />
+    </Logging>
+</SettingsStruct>
+<CameraSettings CameraID="DEV_1AB22C00C497" CameraModel="1800 U-1240c" FeatureCount="136">
+    <FeatureGroup Count="53">
+        <Feature Name="AcquisitionFrameRateEnable" Type="Boolean" Access="R/W">False</Feature>
+        <Feature Name="AcquisitionMode" Type="Enumeration" Access="R/W">Continuous</Feature>
+        <Feature Name="AutoModeRegionHeight" Type="Integer" Access="R/W">0</Feature>
+        <Feature Name="AutoModeRegionOffsetX" Type="Integer" Access="R/W">1006</Feature>
+        <Feature Name="AutoModeRegionOffsetY" Type="Integer" Access="R/W">760</Feature>
+        <Feature Name="AutoModeRegionWidth" Type="Integer" Access="R/W">0</Feature>
+        <Feature Name="BalanceWhiteAuto" Type="Enumeration" Access="R/W">Off</Feature>
+        <Feature Name="BalanceWhiteAutoRate" Type="Float" Access="R/W">100.000000</Feature>
+        <Feature Name="BalanceWhiteAutoTolerance" Type="Float" Access="R/W">5.000000</Feature>
+        <Feature Name="BlackLevel" Type="Float" Access="R/W">0.000000</Feature>
+        <Feature Name="ColorInterpolation" Type="Enumeration" Access="R/W">HighQualityLinear5X5</Feature>
+        <Feature Name="ColorTransformationEnable" Type="Boolean" Access="R/W">False</Feature>
+        <Feature Name="ContrastBrightLimit" Type="Integer" Access="R/W">4095</Feature>
+        <Feature Name="ContrastConfigurationMode" Type="Enumeration" Access="R/W">Expert</Feature>
+        <Feature Name="ContrastDarkLimit" Type="Integer" Access="R/W">0</Feature>
+        <Feature Name="ContrastEnable" Type="Boolean" Access="R/W">False</Feature>
+        <Feature Name="ContrastShape" Type="Integer" Access="R/W">4</Feature>
+        <Feature Name="DeviceIndicatorLuminance" Type="Integer" Access="R/W">0</Feature>
+        <Feature Name="DeviceIndicatorMode" Type="Enumeration" Access="R/W">Active</Feature>
+        <Feature Name="DeviceLinkThroughputLimit" Type="Integer" Access="R/W">200000000</Feature>
+        <Feature Name="DeviceLinkThroughputLimitMode" Type="Enumeration" Access="R/W">On</Feature>
+        <Feature Name="DeviceUserID" Type="String" Access="R/W"></Feature>
+        <Feature Name="ExposureAuto" Type="Enumeration" Access="R/W">Off</Feature>
+        <Feature Name="ExposureAutoMax" Type="Float" Access="R/W">8999963.000000</Feature>
+        <Feature Name="ExposureAutoMin" Type="Float" Access="R/W">62.417000</Feature>
+        <Feature Name="ExposureMode" Type="Enumeration" Access="R/W">Timed</Feature>
+        <Feature Name="ExposureTime" Type="Float" Access="R/W">24684.083984</Feature>
+        <Feature Name="Gain" Type="Float" Access="R/W">0.000000</Feature>
+        <Feature Name="GainAuto" Type="Enumeration" Access="R/W">Off</Feature>
+        <Feature Name="GainAutoMax" Type="Float" Access="R/W">27.000000</Feature>
+        <Feature Name="GainAutoMin" Type="Float" Access="R/W">0.000000</Feature>
+        <Feature Name="Gamma" Type="Float" Access="R/W">1.000000</Feature>
+        <Feature Name="Height" Type="Integer" Access="R/W">2016</Feature>
+        <Feature Name="Hue" Type="Float" Access="R/W">0.000000</Feature>
+        <Feature Name="IntensityAutoPrecedence" Type="Enumeration" Access="R/W">Minimizenoise</Feature>
+        <Feature Name="IntensityControllerAlgorithm" Type="Enumeration" Access="R/W">Mean</Feature>
+        <Feature Name="IntensityControllerOutliersBright" Type="Float" Access="R/W">0.000000</Feature>
+        <Feature Name="IntensityControllerOutliersDark" Type="Float" Access="R/W">0.000000</Feature>
+        <Feature Name="IntensityControllerRate" Type="Integer" Access="R/W">100</Feature>
+        <Feature Name="IntensityControllerRegion" Type="Enumeration" Access="R/W">FullImage</Feature>
+        <Feature Name="IntensityControllerTarget" Type="Float" Access="R/W">10.000000</Feature>
+        <Feature Name="IntensityControllerTolerance" Type="Integer" Access="R/W">5</Feature>
+        <Feature Name="MaxDriverBuffersCount" Type="Integer" Access="R/W">64</Feature>
+        <Feature Name="OffsetX" Type="Integer" Access="R/W">1006</Feature>
+        <Feature Name="OffsetY" Type="Integer" Access="R/W">512</Feature>
+        <Feature Name="PixelFormat" Type="Enumeration" Access="R/W">BGR8</Feature>
+        <Feature Name="ReverseX" Type="Boolean" Access="R/W">False</Feature>
+        <Feature Name="ReverseY" Type="Boolean" Access="R/W">False</Feature>
+        <Feature Name="Saturation" Type="Float" Access="R/W">1.000000</Feature>
+        <Feature Name="SensorShutterMode" Type="Enumeration" Access="R/W">RollingShutter</Feature>
+        <Feature Name="TestPendingAck" Type="Integer" Access="R/W">0</Feature>
+        <Feature Name="UserSetDefault" Type="Enumeration" Access="R/W">Default</Feature>
+        <Feature Name="Width" Type="Integer" Access="R/W">2016</Feature>
+    </FeatureGroup>
+    <SelectorGroup Count="5" SelectedFeatures="20">
+        <Selector Name="BalanceRatioSelector" Type="Enumeration" SelectedFeatures="1">
+            <SelectorCombination Entry="Red" Feature="BalanceRatio" Type="Float">2.620117</SelectorCombination>
+            <SelectorCombination Entry="Blue" Feature="BalanceRatio" Type="Float">1.810059</SelectorCombination>
+        </Selector>
+        <Selector Name="ColorTransformationValueSelector" Type="Enumeration" SelectedFeatures="1">
+            <SelectorCombination Entry="Gain00" Feature="ColorTransformationValue" Type="Float">1.000000</SelectorCombination>
+            <SelectorCombination Entry="Gain01" Feature="ColorTransformationValue" Type="Float">0.000000</SelectorCombination>
+            <SelectorCombination Entry="Gain02" Feature="ColorTransformationValue" Type="Float">0.000000</SelectorCombination>
+            <SelectorCombination Entry="Gain10" Feature="ColorTransformationValue" Type="Float">0.000000</SelectorCombination>
+            <SelectorCombination Entry="Gain11" Feature="ColorTransformationValue" Type="Float">1.000000</SelectorCombination>
+            <SelectorCombination Entry="Gain12" Feature="ColorTransformationValue" Type="Float">0.000000</SelectorCombination>
+            <SelectorCombination Entry="Gain20" Feature="ColorTransformationValue" Type="Float">0.000000</SelectorCombination>
+            <SelectorCombination Entry="Gain21" Feature="ColorTransformationValue" Type="Float">0.000000</SelectorCombination>
+            <SelectorCombination Entry="Gain22" Feature="ColorTransformationValue" Type="Float">1.000000</SelectorCombination>
+        </Selector>
+        <Selector Name="CorrectionSelector" Type="Enumeration" SelectedFeatures="5">
+            <SelectorCombination Entry="DefectPixelCorrection" Feature="CorrectionMode" Type="Enumeration">On</SelectorCombination>
+            <SelectorCombination Entry="DefectPixelCorrection" Feature="CorrectionSet" Type="Enumeration">Preset</SelectorCombination>
+            <SelectorCombination Entry="DefectPixelCorrection" Feature="CorrectionSetDefault" Type="Enumeration">Preset</SelectorCombination>
+            <SelectorCombination Entry="FixedPatternNoiseCorrection" Feature="CorrectionMode" Type="Enumeration">On</SelectorCombination>
+            <SelectorCombination Entry="FixedPatternNoiseCorrection" Feature="CorrectionSet" Type="Enumeration">Preset</SelectorCombination>
+            <SelectorCombination Entry="FixedPatternNoiseCorrection" Feature="CorrectionSetDefault" Type="Enumeration">Preset</SelectorCombination>
+        </Selector>
+        <Selector Name="LineSelector" Type="Enumeration" SelectedFeatures="6">
+            <SelectorCombination Entry="Line0" Feature="LineMode" Type="Enumeration">Input</SelectorCombination>
+            <SelectorCombination Entry="Line0" Feature="TriggerSource" Type="Enumeration">Software</SelectorCombination>
+            <SelectorCombination Entry="Line1" Feature="LineMode" Type="Enumeration">Input</SelectorCombination>
+            <SelectorCombination Entry="Line1" Feature="TriggerSource" Type="Enumeration">Software</SelectorCombination>
+            <SelectorCombination Entry="Line2" Feature="LineMode" Type="Enumeration">Input</SelectorCombination>
+            <SelectorCombination Entry="Line2" Feature="TriggerSource" Type="Enumeration">Software</SelectorCombination>
+            <SelectorCombination Entry="Line3" Feature="LineMode" Type="Enumeration">Input</SelectorCombination>
+            <SelectorCombination Entry="Line3" Feature="TriggerSource" Type="Enumeration">Software</SelectorCombination>
+        </Selector>
+        <Selector Name="TriggerSelector" Type="Enumeration" SelectedFeatures="7">
+            <SelectorCombination Entry="AcquisitionStart" Feature="TriggerMode" Type="Enumeration">Off</SelectorCombination>
+            <SelectorCombination Entry="AcquisitionStart" Feature="LineMode" Type="Enumeration">Input</SelectorCombination>
+            <SelectorCombination Entry="AcquisitionStart" Feature="TriggerSource" Type="Enumeration">Software</SelectorCombination>
+            <SelectorCombination Entry="AcquisitionStart" Feature="TriggerActivation" Type="Enumeration">RisingEdge</SelectorCombination>
+            <SelectorCombination Entry="AcquisitionEnd" Feature="TriggerMode" Type="Enumeration">Off</SelectorCombination>
+            <SelectorCombination Entry="AcquisitionEnd" Feature="LineMode" Type="Enumeration">Input</SelectorCombination>
+            <SelectorCombination Entry="AcquisitionEnd" Feature="TriggerSource" Type="Enumeration">Software</SelectorCombination>
+            <SelectorCombination Entry="AcquisitionEnd" Feature="TriggerActivation" Type="Enumeration">RisingEdge</SelectorCombination>
+            <SelectorCombination Entry="AcquisitionActive" Feature="TriggerMode" Type="Enumeration">Off</SelectorCombination>
+            <SelectorCombination Entry="AcquisitionActive" Feature="LineMode" Type="Enumeration">Input</SelectorCombination>
+            <SelectorCombination Entry="AcquisitionActive" Feature="TriggerSource" Type="Enumeration">Software</SelectorCombination>
+            <SelectorCombination Entry="AcquisitionActive" Feature="TriggerActivation" Type="Enumeration">RisingEdge</SelectorCombination>
+            <SelectorCombination Entry="FrameStart" Feature="TriggerMode" Type="Enumeration">Off</SelectorCombination>
+            <SelectorCombination Entry="FrameStart" Feature="LineMode" Type="Enumeration">Input</SelectorCombination>
+            <SelectorCombination Entry="FrameStart" Feature="TriggerSource" Type="Enumeration">Software</SelectorCombination>
+            <SelectorCombination Entry="FrameStart" Feature="TriggerActivation" Type="Enumeration">RisingEdge</SelectorCombination>
+        </Selector>
+    </SelectorGroup>
+    <IgnoredFeatures Count="69">
+        <Feature Name="AcquisitionFrameCount" Type="Integer" Access="None"></Feature>
+        <Feature Name="AcquisitionFrameRate" Type="Float" Access="R"></Feature>
+        <Feature Name="AcquisitionFrameRateMode" Type="Enumeration" Access="R"></Feature>
+        <Feature Name="AcquisitionStart" Type="Command" Access="W"></Feature>
+        <Feature Name="AcquisitionStatus" Type="Boolean" Access="R"></Feature>
+        <Selector Name="AcquisitionStatusSelector" Type="Enumeration" SelectedFeatures="1"></Selector>
+        <Feature Name="AcquisitionStop" Type="Command" Access="W"></Feature>
+        <Selector Name="AutoModeRegionSelector" Type="Enumeration" SelectedFeatures="4"></Selector>
+        <Selector Name="BlackLevelSelector" Type="Enumeration" SelectedFeatures="1"></Selector>
+        <Selector Name="ColorTransformationSelector" Type="Enumeration" SelectedFeatures="2"></Selector>
+        <Feature Name="CorrectionDataSize" Type="Integer" Access="R"></Feature>
+        <Feature Name="CorrectionEntryType" Type="Integer" Access="R"></Feature>
+        <Feature Name="DeviceFamilyName" Type="String" Access="R"></Feature>
+        <Feature Name="DeviceFirmwareID" Type="String" Access="R"></Feature>
+        <Selector Name="DeviceFirmwareIDSelector" Type="Enumeration" SelectedFeatures="1"></Selector>
+        <Feature Name="DeviceFirmwareVersion" Type="String" Access="R"></Feature>
+        <Selector Name="DeviceFirmwareVersionSelector" Type="Enumeration" SelectedFeatures="1"></Selector>
+        <Feature Name="DeviceGenCPVersionMajor" Type="Integer" Access="R"></Feature>
+        <Feature Name="DeviceGenCPVersionMinor" Type="Integer" Access="R"></Feature>
+        <Feature Name="DeviceLinkSpeed" Type="Integer" Access="R"></Feature>
+        <Feature Name="DeviceManufacturerInfo" Type="String" Access="R"></Feature>
+        <Feature Name="DeviceModelName" Type="String" Access="R"></Feature>
+        <Feature Name="DeviceReset" Type="Command" Access="W"></Feature>
+        <Feature Name="DeviceSFNCVersionMajor" Type="Integer" Access="R"></Feature>
+        <Feature Name="DeviceSFNCVersionMinor" Type="Integer" Access="R"></Feature>
+        <Feature Name="DeviceSFNCVersionSubMinor" Type="Integer" Access="R"></Feature>
+        <Feature Name="DeviceScanType" Type="Enumeration" Access="R"></Feature>
+        <Feature Name="DeviceSerialNumber" Type="String" Access="R"></Feature>
+        <Feature Name="DeviceTemperature" Type="Float" Access="R"></Feature>
+        <Selector Name="DeviceTemperatureSelector" Type="Enumeration" SelectedFeatures="1"></Selector>
+        <Feature Name="DeviceVendorName" Type="String" Access="R"></Feature>
+        <Feature Name="DeviceVersion" Type="String" Access="R"></Feature>
+        <Feature Name="FileAccessBuffer" Type="Raw" Access="None"></Feature>
+        <Feature Name="FileAccessLength" Type="Integer" Access="None"></Feature>
+        <Feature Name="FileAccessOffset" Type="Integer" Access="None"></Feature>
+        <Feature Name="FileOpenMode" Type="Enumeration" Access="R/W"></Feature>
+        <Feature Name="FileOperationExecute" Type="Command" Access="W"></Feature>
+        <Feature Name="FileOperationResult" Type="Integer" Access="R"></Feature>
+        <Feature Name="FileOperationSelector" Type="Enumeration" Access="R/W"></Feature>
+        <Feature Name="FileOperationStatus" Type="Enumeration" Access="R"></Feature>
+        <Feature Name="FileProcessStatus" Type="Enumeration" Access="R"></Feature>
+        <Feature Name="FileSelector" Type="Enumeration" Access="R/W"></Feature>
+        <Feature Name="FileSize" Type="Integer" Access="R"></Feature>
+        <Feature Name="FileStatus" Type="Enumeration" Access="R"></Feature>
+        <Selector Name="GainSelector" Type="Enumeration" SelectedFeatures="3"></Selector>
+        <Feature Name="HeightMax" Type="Integer" Access="R"></Feature>
+        <Selector Name="IntensityControllerSelector" Type="Enumeration" SelectedFeatures="4"></Selector>
+        <Feature Name="LineInverter" Type="Boolean" Access="None"></Feature>
+        <Feature Name="LineSource" Type="Enumeration" Access="None"></Feature>
+        <Feature Name="LineStatus" Type="Boolean" Access="R"></Feature>
+        <Feature Name="LineStatusAll" Type="Integer" Access="R"></Feature>
+        <Feature Name="PayloadSize" Type="Integer" Access="R"></Feature>
+        <Feature Name="PixelSize" Type="Enumeration" Access="R"></Feature>
+        <Feature Name="SensorHeight" Type="Integer" Access="R"></Feature>
+        <Feature Name="SensorWidth" Type="Integer" Access="R"></Feature>
+        <Feature Name="StreamAnnounceBufferMinimum" Type="Integer" Access="R"></Feature>
+        <Feature Name="StreamAnnouncedBufferCount" Type="Integer" Access="R"></Feature>
+        <Feature Name="StreamBufferHandlingMode" Type="Enumeration" Access="R"></Feature>
+        <Feature Name="StreamID" Type="String" Access="R"></Feature>
+        <Feature Name="StreamIsGrabbing" Type="Boolean" Access="R"></Feature>
+        <Feature Name="StreamType" Type="Enumeration" Access="R"></Feature>
+        <Feature Name="TimestampLatch" Type="Command" Access="W"></Feature>
+        <Feature Name="TimestampLatchValue" Type="Integer" Access="R"></Feature>
+        <Feature Name="TimestampReset" Type="Command" Access="W"></Feature>
+        <Feature Name="TriggerSoftware" Type="Command" Access="W"></Feature>
+        <Feature Name="UserSetLoad" Type="Command" Access="W"></Feature>
+        <Feature Name="UserSetSave" Type="Command" Access="None"></Feature>
+        <Feature Name="UserSetSelector" Type="Enumeration" Access="R/W"></Feature>
+        <Feature Name="WidthMax" Type="Integer" Access="R"></Feature>
+    </IgnoredFeatures>
+</CameraSettings>
