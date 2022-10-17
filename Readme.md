@@ -6,7 +6,7 @@
 -->
 
 # dpu-sc 
-![demo](dataset/images/street-2-out.png)
+![demo](doc/fig/billboard.png)
 
 
 # Requirements
@@ -25,17 +25,31 @@ sudo python3 -m pip install tensorflow==2.4.1 -f https://tf.kmtea.eu/whl/stable.
 ```
 
 # How to use dpusc
+We provide two models for sample:
+1. customcnn: Default cnn model. For inference cats and dogs. In dpu-sc, you can add argument `-x cnn` to use it.
+2. yolov3-voc: Default yolo model. For inference some common objects. In dpu-sc, you can add argument `-x yolo` to use it.
+
+and you can modify default model in config.json.
 ```bash 
 python3 dpusc -i <path-to-image>        -x <xmodel-type>  -t <output-type>
               -v <path-to-video>
               -c <webcam device nodes>
-  
+```
+```bash 
 # Inference with image, output image, using cnn
-python3 dpusc -i dataset/images/car.jpg -x cnn -t image
-
+python3 dpusc -i dataset/images/dog.jpg -x cnn -t image
+```
+After execute above command(use cnn xmodel), you will get the result and the output image like below:
+![cnn-result-01](doc/fig/cnn-result-01.png)
+![cnn-result-02](doc/fig/cnn-result-02.png)
+```bash 
 # Inference with image, output DP, using yolo
-python3 dpusc -i dataset/images/car.jpg -x yolo -t dp
-
+python3 dpusc -i dataset/images/moto.jpg -x yolo -t dp
+```
+After execute above command(use yolo xmodel), you will get the result and the output image like below:
+![yolo-result-01](doc/fig/yolo-result-01.png)
+![yolo-result-02](doc/fig/yolo-result-02.png)
+```bash 
 # Inference with video, output image, using yolo
 python3 dpusc -v dataset/videos/walking_humans.nv12.1920x1080.h264 -x yolo -t image
 
@@ -48,11 +62,6 @@ python3 dpusc -c 0 -x yolo -t dp
 # Inference with webcam, output image, using yolo
 python3 dpusc -c 0 -x yolo -t image
 ```
-Below are the example models we provide.
-| Type | model      | dataset      |
-| ---- | :--------- | :----------- |
-| #1   | customcnn  | cats and dog |
-| #2   | yolov3-voc | voc data set |
 
 # Dataset rules
 ### If run with cnn, you must follow the format of dataset naming rule which is label on the prefix of file name.  
@@ -135,6 +144,10 @@ Xmodel and environment settings are in `config.json`.
 
 # Uint Test
 provide unittest script in [/unittest](https://github.com/aiotads/DPU_SC/tree/main/unittest).
+
+# FAQ
+## If you can not download & install tensorflow-2.4.1
+You can use our RPM package to install (please contact james_chen@innodisk.com).
 
 ## Contribution
 [Contributing](contributing.md)
