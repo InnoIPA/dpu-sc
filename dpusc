@@ -36,6 +36,7 @@ def main():
     ap.add_argument('-t', '--target', type=str, help='Output type, default is dp')
     ap.add_argument('-v', '--video' , type=str, help='Path to a video which you would like to inference.')
     ap.add_argument('-x', '--xmodel', type=str, default='yolo', help='Type of xmodel, default is yolo')
+    ap.add_argument('-l', '--lpr'   , type=str, help='Enable LPR mode. This is base on yolo object detection.')
     
     args = ap.parse_args()
     cfg = open_json(CFG)
@@ -91,9 +92,12 @@ def main():
     else:
         logging.info(' --model     : {}'.format('yolo'))
         pred.init_model = pred.init_yolo
-        pred.run_model = pred.run_yolo
-
-
+    
+        if args.lpr:
+            logging.info(' --lpr     : {}'.format('enable'))
+            pred.run_model = pred.run_yolo_lpr
+        else:
+            pred.run_model = pred.run_yolo
 
     ''' Select Output '''
     if args.target == 'dp':
