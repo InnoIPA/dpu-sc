@@ -271,7 +271,40 @@ class PREDICTOR():
 
         return frame
 
+    def run_yolo_lpr(self, frame):
+        from mod.lpr import draw_outputs_lpr
+        
+        time1 = time.time()
+        img = []
 
+        image = preprocess_fn(frame, self.input_size)
+
+        img.append(image)
+        self.x.outputs = self.runDPU_(img[0:])
+
+        time_pred_box = time.time()
+        
+        self.x.sorted = self.x.sort_boxes()
+        # self.x.prediction = self.x.pred_boxes()
+
+        logging.debug("bb output times = {:.4f} seconds".format(time.time() - time_pred_box))
+
+        self.p_boxes, self.p_scores, self.p_classes, self.p_nums = self.x.pred_boxes()
+
+        logging.info(divider)
+
+        logging.info(' Detections:')
+
+        for i in range(self.p_nums[0]):
+            logging.info('\t{}, {}, {}'.format(self.classes[int(self.p_classes[0][i])],
+												np.array(self.p_scores[0][i]),
+												np.array(self.p_boxes[0][i])))
+            
+            fps, time_total, frame = draw_outputs_lpr(frame, (self.p_boxes, self.p_scores, self.p_classes, self.p_nums), self.classes, i, self.color_list[int(self.p_classes[0][i])], time1)
+        
+        logging.info(" Throughput={:.2f} fps, total frames = {:.0f}, time = {:.4f} seconds".format(fps, 1, time_total))
+
+        return frame
 
     '''
 	Func:	Output

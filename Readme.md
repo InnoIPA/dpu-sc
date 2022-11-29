@@ -8,17 +8,17 @@
 # dpu-sc 
 ![demo](doc/fig/billboard.png)
 # Description
-Dpu-sc is a sample code that uses DPU instead of GPU for AI inference. 
+dpu-sc presented a rapid demo which run AI inference on DPU with MPSoC.
 
 # Requirements
-## Dependencies on platform
+### Dependencies on platform
 - Xilinx [KV260](https://www.xilinx.com/products/som/kria/kv260-vision-starter-kit.html)
   - Opencv
   - XIR
   - VART
   - Vitis-AI 1.4
 
-## Python's requirements
+### Python's requirements
 ```bash
 sudo python3 -m pip install --upgrade pip
 sudo python3 -m pip install scikit-build cmake opencv-python mock cython
@@ -26,11 +26,12 @@ sudo python3 -m pip install tensorflow==2.4.1 -f https://tf.kmtea.eu/whl/stable.
 ```
 
 # How to use dpusc
-We provide two models for sample:
+We provide three modes for AI sample:
 1. customcnn: Default CNN model. For inference cats and dogs. In dpu-sc, you can add argument `-x cnn` to use it.
 2. yolov3-voc: Default YOLO model. For inference some common objects. In dpu-sc, you can add argument `-x yolo` to use it.
+3. License Plate Recognition(LPR): We supported taiwain plate license detection and recognition. Make sure you have downloaded `pytesseract` in your environment. Please replace the model path to `models/obj/yolov4-tiny_lpr.xmodel` and anchor to `19,14,62,43,63,50,70,45,71,55,80,59` in config.json. You can add argument `-x yolo -lpr` to use it.
 
-> Notice: Our models is built for DPU4096, if you want to use DPU3136 or others DPU config, please contact James(james_chen@innodisk.com).
+> Notice: Our models were built for DPU4096, if you want to use DPU3136 or others DPU config, please contact our PM James(james_chen@innodisk.com). Also, we supported Vitis-AI 1.4 now.
 
 and if you want to change model, you can modify model path in config.json.
 ```bash 
@@ -56,6 +57,16 @@ After execute above command(use YOLO xmodel), you will get the result and the ou
 ![yolo-result-01](doc/fig/yolo-result-01.png)
 ![yolo-result-02](doc/fig/yolo-result-02.png)
 
+
+## Example - LPR
+```bash   
+# Inference with image, output image, using LPR
+python3 dpusc -i dataset/images/lpr-2.jpg -x yolo -lpr -t image
+```
+After execute above command(use LPR mode), you will get the result and the output image like below:
+![lpr-result-01](doc/fig/lpr-result-01.png)
+![lpr-result-02](doc/fig/lpr-result-02.png)
+
 ## Other Options
 ```bash 
 # Inference with video, output image, using yolo
@@ -69,6 +80,10 @@ python3 dpusc -c 0 -x yolo -t dp
 
 # Inference with webcam, output image, using yolo
 python3 dpusc -c 0 -x yolo -t image
+
+# Inference with video, output DP, using LPR
+python3 dpusc -v <video path> -x yolo -lpr -t dp
+
 ```
 
 # Dataset rules
