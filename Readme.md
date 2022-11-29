@@ -31,7 +31,7 @@ We provide three modes for AI sample:
 2. yolov3-voc: Default YOLO model. For inference some common objects. In dpu-sc, you can add argument `-x yolo` to use it.
 3. License Plate Recognition(LPR): We supported taiwain plate license detection and recognition. Make sure you have downloaded `pytesseract` in your environment. Please replace the model path to `models/obj/yolov4-tiny_lpr.xmodel` and anchor to `19,14,62,43,63,50,70,45,71,55,80,59` in config.json. You can add argument `-x yolo -lpr` to use it.
 
-> Notice: Our models were built for DPU4096, if you want to use DPU3136 or others DPU config, please contact oure PM James(james_chen@innodisk.com). Also, we supported Vitis-AI 1.4 now.
+> Notice: Our models were built for DPU4096, if you want to use DPU3136 or others DPU config, please contact our PM James(james_chen@innodisk.com). Also, we supported Vitis-AI 1.4 now.
 
 and if you want to change model, you can modify model path in config.json.
 ```bash 
