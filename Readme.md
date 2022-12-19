@@ -169,8 +169,40 @@ Xmodel and environment settings are in `config.json`.
 provide unittest script in [/unittest](https://github.com/aiotads/DPU_SC/tree/main/unittest).
 
 # FAQ
-## If you can not download & install tensorflow-2.4.1
-You can use our RPM package to install (please contact james_chen@innodisk.com).
+## Can't download and install tensorflow-2.4.1?
+You can use following setps to download and install tensorflow or
+use our RPM package to install (please contact james_chen@innodisk.com). 
+
+1. Use following command to download the `tensorflow.whl`. 
+
+    ```
+    sudo wget https://github.com/KumaTea/tensorflow-aarch64/releases/download/v2.4/tensorflow-2.4.1-cp37-cp37m-linux_aarch64.whl
+    ```
+2. Install the `tensorflow.whl` without any dependencies.
+    ```
+    sudo pip3 install --no-dependencies tensorflow-2.4.1-cp37-cp37m-linux_aarch64.whl
+    ```
+3. After install `tensorflow`, follow the instructions below to manually install dependencies which we need.
+   
+   1. Create a file named `requirements.txt`.
+   2. Fill the following dependencies in requirements.txt.         
+        ```
+        Keras-Preprocessing==1.1.2
+        flatbuffers==22.12.6
+        termcolor==2.1.1
+        astunparse==1.6.3
+        gast==0.5.3
+        opt-einsum==3.3.0
+        typing-extensions==4.4.0
+        wrapt==1.14.1
+        google-api-python-client==2.70.0
+        absl-py==1.3.0
+        ```
+   3. Use the following command to install the dependencies 
+        ```
+        python3 -m pip install -r requirements.txt
+        ```
+4. Now you can run the dpu-sc with tensorflow.
 
 ## Contribution
 [Contributing](contributing.md)
