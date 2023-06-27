@@ -18,13 +18,48 @@
         },
         "XMODELS_OBJ": {
             "TYPE": "yolo",
-            "MODEL": "models/obj/yolov4_tiny_416_carplate_0606.xmodel",
+            "MODEL": "models/obj/yolov3-voc.xmodel",
             "CLASS": [
-                "CarPlate"
+                "aeroplane",
+                "bicycle",
+                "bird",
+                "boat",
+                "bottle",
+                "bus",
+                "car",
+                "cat",
+                "chair",
+                "cow",
+                "diningtable",
+                "dog",
+                "horse",
+                "motobike",
+                "person",
+                "pottedplant",
+                "sheep",
+                "sofa",
+                "train",
+                "tv"
             ],
             "ANCHORS": [
-                18,13,28,21,32,25,36,28,41,32,67,48
-
+                10,
+                13,
+                16,
+                30,
+                33,
+                23,
+                30,
+                61,
+                62,
+                45,
+                59,
+                119,
+                116,
+                90,
+                156,
+                198,
+                373,
+                326
             ],
             "INPUT_SIZE": [
                 416,

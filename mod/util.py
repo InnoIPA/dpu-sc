@@ -48,7 +48,7 @@ def draw_outputs_lpr(self,img, outputs, class_names, i, color, time1):
 	Cropped = img[x1y1[1]:x2y2[1], x1y1[0]:x2y2[0]]
 	if Cropped.size != 0:
 		Cropped_img = load_lpr_img(Cropped)
-		prebs = self.runDPU2_(Cropped_img)
+		prebs = self.runDPU_LPR(Cropped_img)
 		pred_text = gd_code(prebs)
 
 	time2 = time.time()

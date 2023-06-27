@@ -397,7 +397,7 @@ class PREDICTOR():
         logging.debug("Pred times (DPU function) = {:.4f} seconds".format(time.time() - time_pred_start))
         return outputs
     
-    def runDPU2_(self, Cropped_img):
+    def runDPU_LPR(self, Cropped_img):
         #創建空的output
         outputData = np.empty((1,18,37), dtype=np.float32, order="C")
         #run dpu
