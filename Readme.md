@@ -29,7 +29,7 @@ sudo python3 -m pip install tensorflow==2.4.1 -f https://tf.kmtea.eu/whl/stable.
 We provide three modes for AI sample:
 1. customcnn: Default CNN model. For inference cats and dogs. In dpu-sc, you can add argument `-x cnn` to use it.
 2. yolov3-voc: Default YOLO model. For inference some common objects. In dpu-sc, you can add argument `-x yolo` to use it.
-3. License Plate Recognition(LPR): We supported taiwain plate license detection and recognition. Please replace the model path to `models/obj/yolov4_tiny_416_carplate_0606.xmodel` and anchor to `18,13,28,21,32,25,36,28,41,32,67,48` in config.json. You can add argument `-x yolo -lpr` to use it.
+3. License Plate Recognition(LPR): We supported taiwain plate license detection and recognition. Please replace the model path to `models/obj/yolov4_tiny_416_carplate_0606.xmodel` and anchor to `18,13,28,21,32,25,36,28,41,32,67,48` and classes `CarPlate`in config.json. You can add argument `-x yolo -lpr` to use it.
 
 > Notice: Our models were built for DPU4096, if you want to use DPU3136 or others DPU config, please contact our PM James(james_chen@innodisk.com). Also, we supported Vitis-AI 1.4 now.
 
@@ -156,6 +156,17 @@ Xmodel and environment settings are in `config.json`.
     |`NMS`|Xmodel's NMS(Non-Maximum Suppression).|
     |`CONF`|Xmodel's confidence.|
     |`BOX_MAX_NUM`|The maximum number of bounding box that can be displayed in an image.|
+- MODLES-XMODELS_LPR
+    ```json
+    "XMODELS_LPR": {
+            "TYPE": "lpr",
+            "MODEL": "models/lpr/LPR_kv260.xmodel"
+        }
+    ```
+    |Key Name|Description|
+    |:-|:-|
+    |`TYPE`|Xmodel's type.|
+    |`MODEL`|Path to xmodel.|
 - OUTPUT
     ```json
     "OUTPUT": {
