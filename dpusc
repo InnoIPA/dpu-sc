@@ -19,7 +19,7 @@ from mod.util import open_json
 
 DISPLAY_CARD_PATH = '/dev/dri/by-path/platform-fd4a0000.zynqmp-display-card'
 
-version = "1.0.0"
+version = "2.0.0"
 date = datetime.date.today()
 
 CFG     = 'config.json'
@@ -95,6 +95,7 @@ def main():
     
         if args.lpr:
             logging.info(' --lpr     : {}'.format('enable'))
+            pred.init_model_LPR = pred.init_lpr
             pred.run_model = pred.run_yolo_lpr
         else:
             pred.run_model = pred.run_yolo

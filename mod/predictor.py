@@ -25,6 +25,7 @@ except:
 from mod.dp import DP
 from mod.util import preprocess_fn
 from mod.util import draw_outputs
+from mod.util import draw_outputs_lpr
 from mod.dpu import XMODEL, YOLOV3
 # from mod.util import open_json ,open_labels
 
@@ -56,6 +57,7 @@ IMAGE_OUT_DIR   = 'IMAGE_OUT_DIR'
 LABEL_CLASSES   = 'LABEL_CLASSES'
 XMODELS_CLASS   = 'XMODELS_CLASS'
 XMODELS_OBJ     = 'XMODELS_OBJ'
+XMODELS_LPR     = 'XMODELS_LPR'
 
 divider = '------------------------------------'
 
@@ -65,6 +67,7 @@ class PREDICTOR():
         self.args   = args
 
         self.init_model = None
+        self.init_model_LPR = None
         self.run_model  = None
         self.output     = None
         self.get_frame  = None
@@ -210,6 +213,10 @@ class PREDICTOR():
         self.x.init()
         logging.debug("Init cnn times = {:.4f} seconds".format(time.time() - time_init_start))
 
+    def init_lpr(self):
+        self.model = self.cfg[MODLES][XMODELS_LPR][MODEL]
+        self.y = XMODEL(self.model, 'lpr')
+        self.y.init()
     '''
 	Func:	Models Select
 	Input:	Frame (raw)
@@ -271,11 +278,11 @@ class PREDICTOR():
 
         return frame
 
-    def run_yolo_lpr(self, frame):
-        from mod.lpr import draw_outputs_lpr
-        
+    def run_yolo_lpr(self,frame):
         time1 = time.time()
         img = []
+        fps = 0 
+        time_total = 0
 
         image = preprocess_fn(frame, self.input_size)
 
@@ -300,8 +307,9 @@ class PREDICTOR():
 												np.array(self.p_scores[0][i]),
 												np.array(self.p_boxes[0][i])))
             
-            fps, time_total, frame = draw_outputs_lpr(frame, (self.p_boxes, self.p_scores, self.p_classes, self.p_nums), self.classes, i, self.color_list[int(self.p_classes[0][i])], time1)
-        
+            fps, time_total, frame,pred_text = draw_outputs_lpr(self,frame, (self.p_boxes, self.p_scores, self.p_classes, self.p_nums), self.classes, i, self.color_list[int(self.p_classes[0][i])], time1)
+            self.frame = frame
+        logging.info("LPR result: {}".format(pred_text))
         logging.info(" Throughput={:.2f} fps, total frames = {:.0f}, time = {:.4f} seconds".format(fps, 1, time_total))
 
         return frame
@@ -357,13 +365,9 @@ class PREDICTOR():
         self.vw.write(frame)
 
 
-
-
     # def check_resolution(self, width, height):
     #     resolution = "{}x{}".format(width, height)
     #     all_res = os.popen("modetest -M xlnx -c| awk '/name refresh/ {f=1;next}  /props:/{f=0;} f{print $1 \"@\" $2}'").read()
-
-
 
     def runDPU_(self, img):
         inputTensors = self.x.get_input_tensors()
@@ -392,10 +396,22 @@ class PREDICTOR():
         self.x.predict(inputData, outputs)
         logging.debug("Pred times (DPU function) = {:.4f} seconds".format(time.time() - time_pred_start))
         return outputs
+    
+    def runDPU_LPR(self, Cropped_img):
+        #創建空的output
+        outputData = np.empty((1,18,37), dtype=np.float32, order="C")
+        #run dpu
+        self.y.predict(Cropped_img, outputData)
+        prebs = np.transpose(outputData,(0,2,1))
+        return prebs
+
+    
+
 
     def predict(self):
         ret, frame = self.get_frame()
         self.init_model()
+        self.init_model_LPR()
         
         while ret:
             frame = self.run_model(frame)

@@ -69,6 +69,9 @@
             "NMS": "0.45",
             "CONF": "0.2",
             "BOX_MAX_NUM": "30"
+        },
+        "XMODELS_LPR": {
+            "MODEL": "models/lpr/LPR_kv260.xmodel"
         }
     },
     "OUTPUT": {
