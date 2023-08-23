@@ -411,7 +411,8 @@ class PREDICTOR():
     def predict(self):
         ret, frame = self.get_frame()
         self.init_model()
-        self.init_model_LPR()
+        if self.args.lpr:
+            self.init_model_LPR()   
         
         while ret:
             frame = self.run_model(frame)

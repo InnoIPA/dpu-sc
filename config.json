@@ -18,7 +18,7 @@
         },
         "XMODELS_OBJ": {
             "TYPE": "yolo",
-            "MODEL": "models/obj/yolov3-voc.xmodel",
+            "MODEL": "models/obj/yolov3_voc_416_v25_d3136.xmodel",
             "CLASS": [
                 "aeroplane",
                 "bicycle",
@@ -71,7 +71,7 @@
             "BOX_MAX_NUM": "30"
         },
         "XMODELS_LPR": {
-            "MODEL": "models/lpr/LPR_kv260.xmodel"
+            "MODEL": "models/lpr/yolov4_tiny_carplate_416_v25_d3136.xmodel"
         }
     },
     "OUTPUT": {
