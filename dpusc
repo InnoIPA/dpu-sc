@@ -17,16 +17,30 @@ import sys
 from mod.predictor import PREDICTOR
 from mod.util import open_json
 
+from simple_term_menu import TerminalMenu
+
+print(f"""
+ ____  ____  _   _      ____   ____ 
+|  _ \|  _ \| | | |    / ___| / ___|
+| | | | |_) | | | |____\___ \| |    
+| |_| |  __/| |_| |_____|__) | |___ 
+|____/|_|    \___/     |____/ \____|
+                                    
+Discovery Personal Universe - Super Code
+""")
+                                    
+
+
 DISPLAY_CARD_PATH = '/dev/dri/by-path/platform-fd4a0000.zynqmp-display-card'
 
 version = "2.0.0"
 date = datetime.date.today()
 
-CFG     = 'config.json'
 DISPLAY = "DISPLAY"
 WIDTH   = "WIDTH"
 HEIGHT  = "HEIGHT"
 divider = '------------------------------------'
+equal   = '===================================='
 
 
 def main():
@@ -37,71 +51,77 @@ def main():
     ap.add_argument('-v', '--video' , type=str, help='Path to a video which you would like to inference.')
     ap.add_argument('-x', '--xmodel', type=str, default='yolo', help='Type of xmodel, default is yolo')
     ap.add_argument('-l', '--lpr'   , type=str, help='Enable LPR mode. This is base on yolo object detection.')
-    
     args = ap.parse_args()
-    cfg = open_json(CFG)
-    pred = PREDICTOR(args, cfg)
-
+    
+    logging.info(equal)
     logging.basicConfig(level=logging.INFO)
-
-    logging.info(divider)
     logging.info(" Command line options:")
     logging.info(" Version: {}".format(version))
     logging.info(" Date:    {}".format(date))
 
-    ''' Select Input '''
-    # if args.camera == 'g4':
-    #     logging.info(' --input     : {}'.format('g4'))
-    #     pred.get_frame = pred.g4cam_get
-
-    if args.camera:
-        if (args.camera.isdigit()):
-            logging.info(' --input     : {}'.format('web-cam'))
-            pred.get_frame = pred.cam_get
-
-        else:
-            print("string, please input digital number")
-            return
-
-    elif args.image:
-        if os.path.isfile(args.image):
-            logging.info(' --input     : {}'.format('image'))
-            pred.get_frame = pred.image_get
-
-        else:
-            print("Could not find the file {}.".format(args.image))
-            return
-
-    elif args.video:
-        if os.path.isfile(args.video):
-            logging.info(' --input     : {}'.format('video'))
-            pred.get_frame = pred.video_get
-
-        else:
-            print("Could not find the file {}.".format(args.image))
-            return
-
-
-
-    ''' Select Xmodel '''
-    if args.xmodel == 'cnn':
+    '''select the application'''
+    logging.info(equal)
+    logging.info("Please select the desired application for use...")
+    options = ["cifar10_resnet18_DEMO", "Object detection", "Automatic number-plate recognition","Quit"]
+    terminal_menu = TerminalMenu(options)
+    menu_entry_index = terminal_menu.show()
+    selection = options[menu_entry_index]
+    if selection == "cifar10_resnet18_DEMO":
         logging.info(' --model     : {}'.format('cnn'))
+        cfg = open_json('cfg/cifar10.json')
+        pred = PREDICTOR(args, cfg)
         pred.init_model = pred.init_cnn
         pred.run_model = pred.run_cnn
-
-    else:
+    elif selection == "Object detection":
         logging.info(' --model     : {}'.format('yolo'))
+        cfg = open_json('cfg/Object_detection.json')
+        pred = PREDICTOR(args, cfg)
         pred.init_model = pred.init_yolo
-    
-        if args.lpr:
-            logging.info(' --lpr     : {}'.format('enable'))
-            pred.init_model_LPR = pred.init_lpr
-            pred.run_model = pred.run_yolo_lpr
-        else:
-            pred.run_model = pred.run_yolo
+    elif selection == "Automatic number-plate recognition":
+        logging.info(' --lpr     : {}'.format('enable'))
+        cfg = open_json('cfg/ANPR.json')
+        pred = PREDICTOR(args, cfg)
+        args.lpr = 'enable'
+        pred.init_model = pred.init_yolo
+        pred.init_model_LPR = pred.init_lpr
+        pred.run_model = pred.run_yolo_lpr
+    elif selection == "Quit":
+        quit()
 
+
+
+
+    ''' Select Input '''
+    logging.info(equal)
+    logging.info("Please select the input source...")
+    options = ["camera", "image", "video"]
+    terminal_menu = TerminalMenu(options)
+    menu_entry_index = terminal_menu.show()
+    selection = options[menu_entry_index]
+    if selection == "camera":
+        print("Enter your CAMERA Path")
+        args.camera = input()
+        logging.info(' --input     : {}'.format('web-cam'))
+        pred.get_frame = pred.cam_get
+    elif selection == "image":
+        print("Enter your IMAGE Path")
+        args.image = input()
+        logging.info(' --input     : {}'.format('image'))
+        pred.get_frame = pred.image_get
+    elif selection == "video":
+        print("Enter your VIDEO Path")
+        args.video = input()
+        logging.info(' --input     : {}'.format('video'))
+        pred.get_frame = pred.video_get
+        
     ''' Select Output '''
-    if args.target == 'dp':
+    logging.info(equal)
+    logging.info("Please select the output...")
+    options = ["dp", "image", "video"]
+    terminal_menu = TerminalMenu(options)
+    menu_entry_index = terminal_menu.show()
+    selection = options[menu_entry_index]
+    if selection == "dp":
         if not os.path.exists(DISPLAY_CARD_PATH):
             logging.info('Error: zynqmp-display device is not ready.')
             return
@@ -118,16 +138,15 @@ def main():
 
         logging.info(' --output    : {}'.format('dp'))
         pred.output = pred.dp_out
-
-    elif args.target == 'image':
+    elif selection == "image":
         logging.info(' --output    : {}'.format('image'))
         pred.output = pred.image_out
 
-    elif args.target == 'video':
+    elif selection == "video":
         logging.info(' --output    : {}'.format('video'))
         pred.output = pred.video_out
 
-
+    
     pred.predict()
 
 if __name__ == '__main__':

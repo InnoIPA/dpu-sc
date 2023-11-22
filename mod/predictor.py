@@ -10,6 +10,11 @@ import numpy as np
 import logging
 import random
 import colorsys
+import glob
+from tqdm import tqdm
+
+logging.basicConfig(level=logging.INFO)
+
 # from mod.camera import *
 
 # try:
@@ -86,8 +91,21 @@ class PREDICTOR():
     def image_get(self):
         if self.f_first_get_frame:
             self.f_first_get_frame = False
-            frame = cv2.imread(self.args.image)
-            ret = True
+            # 指定資料夾路徑
+            folder_path = self.args.image
+
+            # 搜尋符合副檔名為.jpg或.png的所有檔案
+            file_extension = ['*.[jJ][pP][gG]', '*.[jJ][pP][eE][gG]', '*.[pP][nN][gG]']
+            frame = []
+            files = []
+            for extension in file_extension:
+                files.extend(glob.glob(os.path.join(folder_path, extension)))
+            print("NOW Loading...")
+            for file in tqdm(files):
+                frame_one = cv2.imread(file)
+                frame.append(frame_one)
+                ret = True
+
 
         else:
             if self.args.target == 'dp':
@@ -103,11 +121,10 @@ class PREDICTOR():
         if self.f_first_get_frame:
             self.f_first_get_frame = False
             self.cap = cv2.VideoCapture(self.args.video)
-            # self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1920)
-            # self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1080)
+
 
             if not self.cap.isOpened():
-                print("Cannot open camera")
+                logging.warning("Cannot read video")
                 exit()
             
             ret, frame = self.cap.read()
@@ -128,7 +145,7 @@ class PREDICTOR():
             self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, height)
 
             if not self.cap.isOpened():
-                print("Cannot open camera")
+                logging.warning("Cannot open camera")
                 exit()
             
             ret, frame = self.cap.read()
@@ -198,8 +215,9 @@ class PREDICTOR():
             self.color_list.append([r, g, b])
 
         time_init_start = time.time()
-        self.x = YOLOV3(self.model, 'yolov3', self.input_size[0], self.box_max_num, self.anchors, self.label_classes, self.iou, self.nms, self.conf)
-        self.x.init()
+        yolo = YOLOV3(self.model, 'yolov3', self.input_size[0], self.box_max_num, self.anchors, self.label_classes, self.iou, self.nms, self.conf)
+        self.yolo = yolo
+        self.yolo.init()
         logging.debug("Init yolov3 times = {:.4f} seconds".format(time.time() - time_init_start))
 
     def init_cnn(self):
@@ -209,108 +227,230 @@ class PREDICTOR():
         self.input_size = self.cfg[MODLES][XMODELS_CLASS][INPUT_SIZE]
 
         time_init_start = time.time()
-        self.x = XMODEL(self.model, 'cnn')
-        self.x.init()
+        self.resnet = XMODEL(self.model, 'cnn')
+        self.resnet.init()
         logging.debug("Init cnn times = {:.4f} seconds".format(time.time() - time_init_start))
 
     def init_lpr(self):
         self.model = self.cfg[MODLES][XMODELS_LPR][MODEL]
-        self.y = XMODEL(self.model, 'lpr')
-        self.y.init()
+        self.lpr = XMODEL(self.model, 'lpr')
+        self.lpr.init()
     '''
 	Func:	Models Select
 	Input:	Frame (raw)
 	Output:	Frame (inferenced)
     '''
     def run_yolo(self, frame):
-        time1 = time.time()
-        img = []
+        frame_out = []
+        if self.args.image != None:
+            for frame_load in frame:
+                time1 = time.time()
+                img = []
+                frame = []
+                outputs = []
 
-        image = preprocess_fn(frame, self.input_size)
+                img = preprocess_fn(frame_load, self.input_size)
+                img = img.astype('float32')
+                img = np.expand_dims(img,axis=0)
 
-        img.append(image)
-        self.x.outputs = self.runDPU_(img[0:])
 
-        time_pred_box = time.time()
-        
-        self.x.sorted = self.x.sort_boxes()
-        # self.x.prediction = self.x.pred_boxes()
+                self.yolo.outputs = self.runDPU_(img)
+                
+                time_pred_box = time.time()
+                
+                self.yolo.sorted = self.yolo.sort_boxes()
+                # self.x.prediction = self.x.pred_boxes()
 
-        logging.debug("bb output times = {:.4f} seconds".format(time.time() - time_pred_box))
+                logging.debug("bb output times = {:.4f} seconds".format(time.time() - time_pred_box))
 
-        self.p_boxes, self.p_scores, self.p_classes, self.p_nums = self.x.pred_boxes()
+                self.p_boxes, self.p_scores, self.p_classes, self.p_nums = self.yolo.pred_boxes()
 
-        time2 = time.time()
-        time_total = time2 - time1
+                time2 = time.time()
+                time_total = time2 - time1
 
-        fps = 1 / time_total
+                fps = 1 / time_total
 
-        logging.info(divider)
-        logging.info(" Throughput={:.2f} fps, total frames = {:.0f}, time = {:.4f} seconds".format(fps, 1, time_total))
+                logging.info(divider)
+                logging.info(" Throughput={:.2f} fps, total frames = {:.0f}, time = {:.4f} seconds".format(fps, 1, time_total))
 
-        logging.info(' Detections:')
+                logging.info(' Detections:')
 
-        for i in range(self.p_nums[0]):
-            logging.info('\t{}, {}, {}'.format(self.classes[int(self.p_classes[0][i])],
-												np.array(self.p_scores[0][i]),
-												np.array(self.p_boxes[0][i])))
-            frame = draw_outputs(frame, (self.p_boxes, self.p_scores, self.p_classes, self.p_nums), self.classes, i, self.color_list[int(self.p_classes[0][i])], fps)
+                for i in range(self.p_nums[0]):
+                    logging.info('\t{}, {}, {}'.format(self.classes[int(self.p_classes[0][i])],
+                                                        np.array(self.p_scores[0][i]),
+                                                        np.array(self.p_boxes[0][i])))
+                    frame = draw_outputs(frame_load, (self.p_boxes, self.p_scores, self.p_classes, self.p_nums), self.classes, i, self.color_list[int(self.p_classes[0][i])], fps)
+                frame_out.append(frame)
 
+            frame = frame_out
+
+        else:
+            time1 = time.time()
+            img = []
+
+            image = preprocess_fn(frame, self.input_size)
+            img.append(image)
+            img = img[0:]
+
+
+            
+            self.yolo.outputs = self.runDPU_(img)
+            
+            time_pred_box = time.time()
+            
+            self.yolo.sorted = self.yolo.sort_boxes()
+            # self.x.prediction = self.x.pred_boxes()
+
+            logging.debug("bb output times = {:.4f} seconds".format(time.time() - time_pred_box))
+
+            self.p_boxes, self.p_scores, self.p_classes, self.p_nums = self.yolo.pred_boxes()
+
+            time2 = time.time()
+            time_total = time2 - time1
+
+            fps = 1 / time_total
+
+            logging.info(divider)
+            logging.info(" Throughput={:.2f} fps, total frames = {:.0f}, time = {:.4f} seconds".format(fps, 1, time_total))
+
+            logging.info(' Detections:')
+
+            for i in range(self.p_nums[0]):
+                logging.info('\t{}, {}, {}'.format(self.classes[int(self.p_classes[0][i])],
+                                                    np.array(self.p_scores[0][i]),
+                                                    np.array(self.p_boxes[0][i])))
+                frame = draw_outputs(frame, (self.p_boxes, self.p_scores, self.p_classes, self.p_nums), self.classes, i, self.color_list[int(self.p_classes[0][i])], fps)
+
+                
         return frame
 
     def run_cnn(self, frame):
-        time1 = time.time()
-        img = []
-        img.append(preprocess_fn(frame, self.input_size))
-        self.x.outputs = self.runDPU_(img[0:])
+        frame_out = []
+        for frame_load in frame:
+            time1 = time.time()
+            img = []
+            frame = []
+            img = (preprocess_fn(frame_load, self.input_size))
+            img = img.astype('float32')
+            img = np.expand_dims(img,axis=0)
+            img = img.transpose(0, 3, 1, 2)
+            self.resnet.outputs = self.runDPU_resnet(img)
 
-        prediction = self.classes[np.argmax(self.x.outputs[0][0])]
+            prediction = self.classes[np.argmax(self.resnet.outputs)]
 
-        time2 = time.time()
-        time_total = time2 - time1
-        fps = 1 / time_total
+            time2 = time.time()
+            time_total = time2 - time1
+            fps = 1 / time_total
 
-        logging.info(divider)
-        logging.info("Throughput={:.2f} fps, total frames = {:.0f}, time={:.4f} seconds".format(fps, 1, time_total))
+            logging.info(divider)
+            logging.info("Throughput={:.2f} fps, total frames = {:.0f}, time={:.4f} seconds".format(fps, 1, time_total))
+            logging.info('class={}'.format(prediction))
 
-        ''' Put fps and pridict class on image '''
-        frame = cv2.putText(frame, '{} fps: {:.4f}'.format(prediction, fps), (10, 50), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255, 255, 255), 2)
+            ''' Put fps and pridict class on image '''
+            frame = cv2.putText(frame_load, '{} fps: {:.4f}'.format(prediction, fps), (1, 5), cv2.FONT_HERSHEY_COMPLEX_SMALL, 0.3, (255, 255, 255), 2)
+            frame_out.append(frame)
+        
+        frame = frame_out
 
         return frame
 
     def run_yolo_lpr(self,frame):
-        time1 = time.time()
-        img = []
-        fps = 0 
-        time_total = 0
-
-        image = preprocess_fn(frame, self.input_size)
-
-        img.append(image)
-        self.x.outputs = self.runDPU_(img[0:])
-
-        time_pred_box = time.time()
-        
-        self.x.sorted = self.x.sort_boxes()
-        # self.x.prediction = self.x.pred_boxes()
-
-        logging.debug("bb output times = {:.4f} seconds".format(time.time() - time_pred_box))
-
-        self.p_boxes, self.p_scores, self.p_classes, self.p_nums = self.x.pred_boxes()
-
-        logging.info(divider)
-
-        logging.info(' Detections:')
-
-        for i in range(self.p_nums[0]):
-            logging.info('\t{}, {}, {}'.format(self.classes[int(self.p_classes[0][i])],
-												np.array(self.p_scores[0][i]),
-												np.array(self.p_boxes[0][i])))
+        frame_out = []
+        if self.args.image != None:
+            for frame_load in frame:
+                time1 = time.time()
+                img = []
+                frame = []
+                fps = 0 
+                time_total = 0
+                pred_text = None
             
-            fps, time_total, frame,pred_text = draw_outputs_lpr(self,frame, (self.p_boxes, self.p_scores, self.p_classes, self.p_nums), self.classes, i, self.color_list[int(self.p_classes[0][i])], time1)
-            self.frame = frame
-        logging.info("LPR result: {}".format(pred_text))
-        logging.info(" Throughput={:.2f} fps, total frames = {:.0f}, time = {:.4f} seconds".format(fps, 1, time_total))
+                image = preprocess_fn(frame_load, self.input_size)
+
+                img.append(image)
+                img = img[0:]
+
+                time_pred_start = time.time()
+
+                self.yolo.outputs = self.runDPU_(img)
+
+                time_pred_box = time.time()
+                
+                self.yolo.sorted = self.yolo.sort_boxes()
+                # self.x.prediction = self.x.pred_boxes()
+
+                logging.debug("bb output times = {:.4f} seconds".format(time.time() - time_pred_box))
+
+                self.p_boxes, self.p_scores, self.p_classes, self.p_nums = self.yolo.pred_boxes()
+
+                logging.info(divider)
+
+                logging.info(' Detections:')
+
+                for i in range(self.p_nums[0]):
+                    logging.info('\t{}, {}, {}'.format(self.classes[int(self.p_classes[0][i])],
+                                                        np.array(self.p_scores[0][i]),
+                                                        np.array(self.p_boxes[0][i])))
+                    
+                fps, time_total, frame, pred_text = draw_outputs_lpr(self,frame_load, (self.p_boxes, self.p_scores, self.p_classes, self.p_nums), self.classes, i, self.color_list[int(self.p_classes[0][i])], time1, pred_text)
+                self.frame = frame
+                time3 = time.time()
+                time_total_all = time3 - time1
+                fps_all = 1 / time_total_all
+
+                logging.info(" LPR result: {}".format(pred_text))
+                logging.info(" Throughput={:.2f} fps, total frames = {:.0f}, time = {:.4f} seconds".format(fps, 1, time_total))
+                logging.debug(" Global FPS={:.2f} fps".format(fps_all))
+                frame_out.append(self.frame)
+
+            frame = frame_out
+            
+            
+        else:
+            time1 = time.time()
+            img = []
+            fps = 0 
+            time_total = 0
+            pred_text = None
+           
+            image = preprocess_fn(frame, self.input_size)
+
+            img.append(image)
+            img = img[0:]
+
+            time_pred_start = time.time()
+
+            self.yolo.outputs = self.runDPU_(img)
+
+            time_pred_box = time.time()
+            
+            self.yolo.sorted = self.yolo.sort_boxes()
+            # self.x.prediction = self.x.pred_boxes()
+
+            logging.debug("bb output times = {:.4f} seconds".format(time.time() - time_pred_box))
+
+            self.p_boxes, self.p_scores, self.p_classes, self.p_nums = self.yolo.pred_boxes()
+
+            logging.info(divider)
+
+            logging.info(' Detections:')
+
+            for i in range(self.p_nums[0]):
+                logging.info('\t{}, {}, {}'.format(self.classes[int(self.p_classes[0][i])],
+                                                    np.array(self.p_scores[0][i]),
+                                                    np.array(self.p_boxes[0][i])))
+                
+                fps, time_total, frame, pred_text = draw_outputs_lpr(self,frame, (self.p_boxes, self.p_scores, self.p_classes, self.p_nums), self.classes, i, self.color_list[int(self.p_classes[0][i])], time1, pred_text)
+                self.frame = frame
+            
+            time3 = time.time()
+            time_total_all = time3 - time1
+            fps_all = 1 / time_total_all
+
+            logging.info(" LPR result: {}".format(pred_text))
+            logging.info(" Throughput={:.2f} fps, total frames = {:.0f}, time = {:.4f} seconds".format(fps, 1, time_total))
+            logging.debug(" Global FPS={:.2f} fps".format(fps_all))
+
 
         return frame
 
@@ -347,8 +487,9 @@ class PREDICTOR():
         if self.f_first_output:
             self.f_first_output = False
 
-        output_dir = self.cfg[OUTPUT][IMAGE_OUT_DIR]
-        cv2.imwrite('{}o_p_{}.png'.format(output_dir, time.time()), frame)
+        for frame_write in frame:
+            output_dir = self.cfg[OUTPUT][IMAGE_OUT_DIR]
+            cv2.imwrite('{}o_p_{}.png'.format(output_dir, time.time()), frame_write)
 
     def video_out(self, frame):
         if self.f_first_output:
@@ -369,9 +510,15 @@ class PREDICTOR():
     #     resolution = "{}x{}".format(width, height)
     #     all_res = os.popen("modetest -M xlnx -c| awk '/name refresh/ {f=1;next}  /props:/{f=0;} f{print $1 \"@\" $2}'").read()
 
+    def runDPU_resnet(self,img):
+        outputData = np.empty((1,10), dtype=np.int8, order="C")
+        self.resnet.predict(img,outputData)
+
+        return outputData
+
     def runDPU_(self, img):
-        inputTensors = self.x.get_input_tensors()
-        outputTensors = self.x.get_output_tensors()
+        inputTensors = self.yolo.get_input_tensors()
+        outputTensors = self.yolo.get_output_tensors()
         
         input_ndim = tuple(inputTensors[0].dims)
         output_ndim = []
@@ -391,19 +538,19 @@ class PREDICTOR():
 
         '''init input image to input buffer '''
         '''run with batch '''
-
         time_pred_start = time.time()
-        self.x.predict(inputData, outputs)
-        logging.debug("Pred times (DPU function) = {:.4f} seconds".format(time.time() - time_pred_start))
+
+        self.yolo.predict(inputData, outputs)
+        #logging.debug("Pred times (DPU function) = {:.4f} seconds".format(time.time() - time_pred_start))
         return outputs
     
     def runDPU_LPR(self, Cropped_img):
         #創建空的output
         outputData = np.empty((1,18,37), dtype=np.float32, order="C")
         #run dpu
-        self.y.predict(Cropped_img, outputData)
-        prebs = np.transpose(outputData,(0,2,1))
-        return prebs
+        self.lpr.predict(Cropped_img, outputData)
+        
+        return outputData
 
     
 
@@ -411,8 +558,8 @@ class PREDICTOR():
     def predict(self):
         ret, frame = self.get_frame()
         self.init_model()
-        if self.args.lpr:
-            self.init_model_LPR()   
+        if self.args.lpr == 'enable':
+            self.init_model_LPR()
         
         while ret:
             frame = self.run_model(frame)

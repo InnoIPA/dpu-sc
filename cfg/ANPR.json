@@ -1,0 +1,26 @@
+{
+    "DISPLAY": {
+        "WIDTH": "1920",
+        "HEIGHT": "1080"
+    },
+    "MODLES": {
+        "XMODELS_OBJ": {
+            "TYPE": "yolo",
+            "MODEL": "models/obj/yolov4_tiny_carplate_416_v25_d3136.xmodel",
+            "CLASS": ["CarPlate"],
+            "ANCHORS": [18,13,28,21,32,25,36,28,41,32,67,48],
+            "INPUT_SIZE": [416,416],
+            "IOU": "0.213",
+            "NMS": "0.45",
+            "CONF": "0.2",
+            "BOX_MAX_NUM": "30"
+        },
+        "XMODELS_LPR": {
+            "MODEL": "models/lpr/LPR_3136_v25.xmodel"
+        }
+    },
+    "OUTPUT": {
+        "VIDEO_OUTPUT": "./output.mp4",
+        "IMAGE_OUT_DIR": "./"
+    }
+}
