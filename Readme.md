@@ -16,7 +16,7 @@ dpu-sc presented a rapid demo which run AI inference on DPU with MPSoC.
   - Opencv
   - XIR
   - VART
-  - Vitis-AI 1.4
+  - Vitis-AI 2.5
 
 ### Python's requirements
 ```bash
@@ -27,79 +27,67 @@ sudo python3 -m pip install tensorflow==2.4.1 -f https://tf.kmtea.eu/whl/stable.
 
 # How to use dpusc
 We provide three modes for AI sample:
-1. customcnn: Default CNN model. For inference cats and dogs. In dpu-sc, you can add argument `-x cnn` to use it.
-2. yolov3-voc: Default YOLO model. For inference some common objects. In dpu-sc, you can add argument `-x yolo` to use it.
-3. License Plate Recognition(LPR): We supported taiwain plate license detection and recognition. Please replace the model path to `models/obj/yolov4_tiny_carplate_416_v25_d3136.model` and anchor to `18,13,28,21,32,25,36,28,41,32,67,48` and classes `CarPlate`in config.json. You can add argument `-x yolo -lpr` to use it.
+1. cifar10_resnet18: Default Resnet18 model. For inference cifar10 classes. 
+2. Object detection: Default YOLO model. For inference some common objects. 
+3. Automatic number-plate recognition(ANPR): We supported taiwain plate license detection and recognition. 
 
-> Notice: Our models were built for DPU4096, if you want to use DPU3136 or others DPU config, please contact our PM James(james_chen@innodisk.com). Also, we supported Vitis-AI 1.4 now.
+> Notice: Our models were built for DPU3136, if you want to use DPU4096 or others DPU config, please contact our PM James(james_chen@innodisk.com). Also, we supported Vitis-AI 2.5 now.
 
-and if you want to change model, you can modify model path in config.json.
+
 ```bash 
-python3 dpusc -i <path-to-image>        -x <xmodel-type>  -t <output-type>
-              -v <path-to-video>
-              -c <webcam device nodes>
+python3 dpusc 
 ```
-## Example - CNN
+## Example
 > Note: CNN is unsupport after BSP version 1.2.2(Vitis-AI 2.5).
 ```bash 
-# Inference with image, output image, using CNN
-python3 dpusc -i dataset/images/dog.jpg -x cnn -t image
+# Usage
+python3 dpusc 
 ```
-After execute above command(use CNN xmodel), you will get the result and the output image like below:
-![cnn-result-01](doc/fig/cnn-result-01.png)
+Select the desired application for use, you will get the result and the output image like below:
+![dpusc-app](doc/fig/dpusc-app.png)
+
+ - Next step enter your source
+
+    ![dpusc-source](doc/fig/dpusc-source.png)
+
+ - And choose your input
+
+    ![dpusc-input](doc/fig/dpusc-input.png)
+
+ - Finally choose your output
+
+    ![dpusc-output](doc/fig/dpusc-output.png)
+
+## Example - cifar10_resnet18_DEMO
+
+> Now only support IMAGE mode
+
+Use cifar10_resnet18_DEMO, you will get the result and the output image like below:
+
 ![cnn-result-02](doc/fig/cnn-result-02.png)
 
-## Example - YOLO
-```bash   
-# Inference with image, output DP, using yolo
-python3 dpusc -i dataset/images/moto.jpg -x yolo -t dp
-```
-After execute above command(use YOLO xmodel), you will get the result and the output image like below:
+
+## Example - Object detection
+
+Use Object detection, you will get the result and the output image like below:
+
 ![yolo-result-01](doc/fig/yolo-result-01.png)
 ![yolo-result-02](doc/fig/yolo-result-02.png)
 
 
-## Example - LPR
-```bash   
-# Inference with image, output image, using LPR
-python3 dpusc -i dataset/images/lpr-2.jpg -x yolo -lpr -t image
-```
-After execute above command(use LPR mode), you will get the result and the output image like below:
+## Example - Automatic number-plate recognition
+
+Use Automatic number-plate recognition mode, you will get the result and the output image like below:
+
 ![lpr-result-01](doc/fig/lpr-result-01.png)
 ![lpr-result-02](doc/fig/lpr-result-02.png)
 
-## Other Options
-```bash 
-# Inference with video, output image, using yolo
-python3 dpusc -v dataset/videos/walking_humans.nv12.1920x1080.h264 -x yolo -t image
 
-# Inference with video, output video, using yolo
-python3 dpusc -v dataset/videos/walking_humans.nv12.1920x1080.h264 -x yolo -t video
 
-# Inference with webcam, output DP, using yolo
-python3 dpusc -c 0 -x yolo -t dp
 
-# Inference with webcam, output image, using yolo
-python3 dpusc -c 0 -x yolo -t image
-
-# Inference with video, output DP, using LPR
-python3 dpusc -v <video path> -x yolo -lpr -t dp
-
-# Inference with video, output Video, using LPR
-python3 dpusc -v <video path> -x yolo -lpr -t video
-
-```
-
-# Dataset rules
-### If run with CNN, you must follow the format of dataset naming rule which is label on the prefix of file name.  
-e.g.   
-  - at images_demo we detect cat or dog.  
-  - at images_usb we detect perfect or defect.  
-  
-and so on.  
 
 # Config.json
-Xmodel and environment settings are in `config.json`.
+> In this update, our users do not need to modify config.json by themselves, but if they have special needs, they can still modify it in the following format
 - DISPLAY
     ```json
     "DISPLAY": {
