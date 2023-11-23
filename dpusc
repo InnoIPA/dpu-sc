@@ -77,6 +77,7 @@ def main():
         cfg = open_json('cfg/Object_detection.json')
         pred = PREDICTOR(args, cfg)
         pred.init_model = pred.init_yolo
+        pred.run_model = pred.run_yolo
     elif selection == "Automatic number-plate recognition":
         logging.info(' --lpr     : {}'.format('enable'))
         cfg = open_json('cfg/ANPR.json')
