@@ -6,17 +6,31 @@
 -->
 
 # dpu-sc 
+- [Description](#Description)
+- [Requirements](#Requirements)
+- [How to use dpusc](#How-to-use-dpusc)
+- [Example](#Example)
+    - [Example - Cifar10_Resnet18_DEMO](#Example-Cifar10-Resnet18-DEMO)
+    - [Example - Object detection](#Example-Object-detection)
+    - [Example - Automatic number-plate recognition](#Example-Automatic-number-plate-recognition)
+- [Config.json](#Config.json)
+- [Uint Test](#Unit-Test)
+- [FAQ](#FAQ)
+
 ![demo](doc/fig/billboard.png)
+
 # Description
 dpu-sc presented a rapid demo which run AI inference on DPU with MPSoC.
 
 # Requirements
 ### Dependencies on platform
+- [EXMU-X261](https://github.com/InnoIPA/EXMU-X261-usermanual)
 - Xilinx [KV260](https://www.xilinx.com/products/som/kria/kv260-vision-starter-kit.html)
   - Opencv
   - XIR
   - VART
   - Vitis-AI 2.5
+
 
 ### Python's requirements
 ```bash
@@ -27,67 +41,73 @@ sudo python3 -m pip install tensorflow==2.4.1 -f https://tf.kmtea.eu/whl/stable.
 
 # How to use dpusc
 We provide three modes for AI sample:
-1. cifar10_resnet18: Default Resnet18 model. For inference cifar10 classes. 
+1. Cifar10 Resnet18 DEMO: Default Resnet18 model. For inference Resnet18 by Cifar10 dataset
 2. Object detection: Default YOLO model. For inference some common objects. 
-3. Automatic number-plate recognition(ANPR): We supported taiwain plate license detection and recognition. 
+3. Automatic number-plate recognition(ANPR): We supported Taiwain plate license detection and recognition. 
 
 > Notice: Our models were built for DPU3136, if you want to use DPU4096 or others DPU config, please contact our PM James(james_chen@innodisk.com). Also, we supported Vitis-AI 2.5 now.
 
 
-```bash 
-python3 dpusc 
-```
+
 ## Example
-> Note: CNN is unsupport after BSP version 1.2.2(Vitis-AI 2.5).
+> Note: The CNNs in the old version of DPUSC are no longer supported after BSP version 1.2.2(Vitis-AI 2.5).
+
+To use this program, first clone the repo. Then, run the following code in a terminal window. The program will launch in the window.
 ```bash 
-# Usage
+# Start to run code
 python3 dpusc 
 ```
-Select the desired application for use, you will get the result and the output image like below:
+As you can see, the code has successfully executed. Here is a screenshot of the output.
+
+To select the application you want to use, you will be presented with a list of options.
+
 ![dpusc-app](doc/fig/dpusc-app.png)
 
- - Next step enter your source
+ Next, select your input source.
 
-    ![dpusc-source](doc/fig/dpusc-source.png)
+![dpusc-source](doc/fig/dpusc-source.png)
 
- - And choose your input
+ Next, enter the location of your input source.
 
-    ![dpusc-input](doc/fig/dpusc-input.png)
+![dpusc-input](doc/fig/dpusc-input.png)
 
- - Finally choose your output
+ Finally, select the format to save the output results in. The output format must be the same as the input format, except for DP.
 
-    ![dpusc-output](doc/fig/dpusc-output.png)
 
-## Example - cifar10_resnet18_DEMO
+![dpusc-output](doc/fig/dpusc-output.png)
+
+## Example-Cifar10 Resnet18 DEMO
 
 > Now only support IMAGE mode
 
-Use cifar10_resnet18_DEMO, you will get the result and the output image like below:
+After selecting the first application "Cifar10_Resnet18_DEMO" and choosing the input and output formats, you will get the following results and find the output file in the folder.
 
 ![cnn-result-02](doc/fig/cnn-result-02.png)
 
 
-## Example - Object detection
+## Example-Object detection
 
-Use Object detection, you will get the result and the output image like below:
+After selecting the second application "Object detection" and choosing the input and output formats, you will get the following results and find the output file in the folder in the format you selected. 
+
+Additionally, during inference, you can view inference information, including bounding boxes and FPS, in the terminal window.
 
 ![yolo-result-01](doc/fig/yolo-result-01.png)
 ![yolo-result-02](doc/fig/yolo-result-02.png)
 
 
-## Example - Automatic number-plate recognition
+## Example-Automatic number-plate recognition
 
-Use Automatic number-plate recognition mode, you will get the result and the output image like below:
+After selecting the third application "Automatic number-plate recognition" and choosing the input and output formats, you will get the following results and find the output file in the folder in the format you selected. 
+
+Additionally, during inference, you can view inference information, including bounding boxes, FPS, and license plate detection results, in the terminal window.
 
 ![lpr-result-01](doc/fig/lpr-result-01.png)
 ![lpr-result-02](doc/fig/lpr-result-02.png)
 
 
 
-
-
 # Config.json
-> In this update, our users do not need to modify config.json by themselves, but if they have special needs, they can still modify it in the following format
+Previously, users had to manually modify the config.json file to switch applications. However, in this version update, we have integrated config.json directly into DPUSC. This will significantly reduce the learning curve for beginners. But, if you want to try to modify the JSON content, you can still find relevant annotations in the table below.
 - DISPLAY
     ```json
     "DISPLAY": {
@@ -168,7 +188,7 @@ Use Automatic number-plate recognition mode, you will get the result and the out
     |`VIDEO_OUTPUT`|The path of the output video.|
     |`IMAGE_OUT_DIR`|The path of the output image directory.|
 
-# Uint Test
+# Unit Test
 provide unittest script in [/unittest](https://github.com/aiotads/DPU_SC/tree/main/unittest).
 
 # FAQ
