@@ -6,16 +6,23 @@
 -->
 
 # dpu-sc 
-- [Description](#Description)
-- [Requirements](#Requirements)
-- [How to use dpusc](#How-to-use-dpusc)
-- [Example](#Example)
-    - [Example - Cifar10_Resnet18_DEMO](#Example-Cifar10-Resnet18-DEMO)
-    - [Example - Object detection](#Example-Object-detection)
-    - [Example - Automatic number-plate recognition](#Example-Automatic-number-plate-recognition)
-- [Config.json](#Config.json)
-- [Uint Test](#Unit-Test)
-- [FAQ](#FAQ)
+- [dpu-sc](#dpu-sc)
+- [Description](#description)
+- [Requirements](#requirements)
+    - [Dependencies on platform](#dependencies-on-platform)
+    - [Python's requirements](#pythons-requirements)
+- [How to use dpusc](#how-to-use-dpusc)
+  - [Example](#example)
+  - [Example-Cifar10 Resnet18 DEMO](#example-cifar10-resnet18-demo)
+  - [Example-Object detection](#example-object-detection)
+  - [Example-Automatic number-plate recognition](#example-automatic-number-plate-recognition)
+- [Config.json](#configjson)
+- [Unit Test](#unit-test)
+    - [Usage](#usage)
+- [FAQ](#faq)
+  - [Can't download and install tensorflow-2.4.1?](#cant-download-and-install-tensorflow-241)
+  - [Contribution](#contribution)
+  - [License](#license)
 
 ![demo](doc/fig/billboard.png)
 
@@ -107,18 +114,22 @@ Additionally, during inference, you can view inference information, including bo
 
 
 # Config.json
-Previously, users had to manually modify the config.json file to switch applications. However, in this version update, we have integrated config.json directly into DPUSC. This will significantly reduce the learning curve for beginners. But, if you want to try to modify the JSON content, you can still find relevant annotations in the table below.
+Previously, users had to manually modify the config.json file to switch applications. However, in this version update, we have integrated config.json directly into DPUSC. This will significantly reduce the learning curve for beginners. 
+
+But, if you want to try to modify the JSON content, you can still find relevant annotations in the table below.
 - DISPLAY
     ```json
     "DISPLAY": {
         "WIDTH": "1920",
-        "HEIGHT": "1080"
+        "HEIGHT": "1080",
+        "DISPLAY_CARD_PATH": "/dev/dri/by-path/platform-fd4a0000.zynqmp-display-card"
     }
     ```
     |Key Name|Description|
     |:-|:-|
     |`WIDTH`|The width of your display resolution.|
     |`HEIGHT`|The height of your display resolution.|
+    |`DISPLAY_CARD_PATH`|The path of your display card location.|
 
 - MODLES-XMODELS_CLASS
     ```json
@@ -190,6 +201,19 @@ Previously, users had to manually modify the config.json file to switch applicat
 
 # Unit Test
 provide unittest script in [/unittest](https://github.com/aiotads/DPU_SC/tree/main/unittest).
+
+In this unit, you can test whether there are any projects that fail to run due to hardware problems.
+
+### Usage
+```bash
+./unittest.sh [TEST]
+
+[TEST]
+        dpu:  run the dpu unit test
+        util: run the utility unit test
+        yolo: run the yolo unit test
+        all:  run all off the dpu unit test
+```
 
 # FAQ
 ## Can't download and install tensorflow-2.4.1?
