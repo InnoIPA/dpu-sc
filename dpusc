@@ -31,14 +31,14 @@ Discovery Personal Universe - Super Code
                                     
 
 
-DISPLAY_CARD_PATH = '/dev/dri/by-path/platform-fd4a0000.zynqmp-display-card'
 
-version = "2.0.0"
+version = "2.1.0"
 date = datetime.date.today()
 
 DISPLAY = "DISPLAY"
 WIDTH   = "WIDTH"
 HEIGHT  = "HEIGHT"
+DISPLAY_CARD_PATH = "DISPLAY_CARD_PATH"
 divider = '------------------------------------'
 equal   = '===================================='
 

@@ -1,7 +1,8 @@
 {
     "DISPLAY": {
         "WIDTH": "1920",
-        "HEIGHT": "1080"
+        "HEIGHT": "1080",
+        "DISPLAY_CARD_PATH": "/dev/dri/by-path/platform-fd4a0000.zynqmp-display-card"
     },
     "MODLES": {
         "XMODELS_CLASS": {
