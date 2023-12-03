@@ -39,16 +39,19 @@ def draw_outputs(img, outputs, class_names, i, color, fps):
 			
 	return img
 
-def draw_outputs_lpr(self,img, outputs, class_names, i, color, time1):
+def draw_outputs_lpr(self,img, outputs, class_names, i, color, time1,pred_text):
 	boxes, objectness, classes, nums = outputs
 	boxes, objectness, classes, nums = boxes[0], objectness[0], classes[0], nums[0]
 	wh = np.flip(img.shape[0:2])
 	x1y1 = tuple((np.array(boxes[i][0:2]) * wh).astype(np.int32))
 	x2y2 = tuple((np.array(boxes[i][2:4]) * wh).astype(np.int32))
 	Cropped = img[x1y1[1]:x2y2[1], x1y1[0]:x2y2[0]]
+	outputData = np.empty((1,18,37), dtype=np.float32, order="C")
+	time_pred_start = None
 	if Cropped.size != 0:
 		Cropped_img = load_lpr_img(Cropped)
 		prebs = self.runDPU_LPR(Cropped_img)
+		prebs = np.transpose(prebs,(0,2,1))
 		pred_text = gd_code(prebs)
 
 	time2 = time.time()
@@ -59,8 +62,8 @@ def draw_outputs_lpr(self,img, outputs, class_names, i, color, time1):
 		img = cv2.rectangle(img, x1y1, x2y2, color, 2)
 		img = cv2.putText(img, '{}'.format(pred_text), x1y1, cv2.FONT_HERSHEY_COMPLEX_SMALL, 3, color, 2)
 		img = cv2.putText(img, 'fps: {:.2f}'.format(fps), (10, 50), cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (255, 255, 255), 1, cv2.LINE_AA)
-			
-	return fps, time_total, img,pred_text
+
+	return fps, time_total, img, pred_text
 
 def load_lpr_img(Cropped):
 	#load圖片

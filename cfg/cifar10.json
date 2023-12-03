@@ -1,0 +1,19 @@
+{
+    "DISPLAY": {
+        "WIDTH": "1920",
+        "HEIGHT": "1080",
+        "DISPLAY_CARD_PATH": "/dev/dri/by-path/platform-fd4a0000.zynqmp-display-card"
+    },
+    "MODLES": {
+        "XMODELS_CLASS": {
+            "TYPE": "cnn",
+            "MODEL": "models/cnn/ResNet_cifar10.xmodel",
+            "CLASS": ["airplane","automobile","bird","cat","deer","dog","frog","horse","ship","truck"],
+            "INPUT_SIZE": [32,32]
+        }
+    },
+    "OUTPUT": {
+        "VIDEO_OUTPUT": "./output.mp4",
+        "IMAGE_OUT_DIR": "./"
+    }
+}

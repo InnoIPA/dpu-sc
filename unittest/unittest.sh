@@ -11,7 +11,6 @@ PRINTUSAGE() {
     echo "        dpu:  run the dpu unit test"
     echo "        util: run the utility unit test"
     echo "        yolo: run the yolo unit test"
-    echo "        cnn:  run the cnn unit test"
     echo "        all:  run all off the dpu unit test"
 }
 
@@ -25,9 +24,6 @@ if [ ! -z $1 ]; then
             ;;
         yolo)
             FILE="yoloTest.py"
-            ;;
-        cnn)
-            FILE="cnnTest.py"
             ;;
         all)
             TF_CPP_MIN_LOG_LEVEL=3 python3 -m unittest discover . "*Test.py" -v

@@ -6,17 +6,38 @@
 -->
 
 # dpu-sc 
+- [dpu-sc](#dpu-sc)
+- [Description](#description)
+- [Requirements](#requirements)
+    - [Dependencies on platform](#dependencies-on-platform)
+    - [Python's requirements](#pythons-requirements)
+- [How to use dpusc](#how-to-use-dpusc)
+  - [Example](#example)
+  - [Example-Cifar10 Resnet18 DEMO](#example-cifar10-resnet18-demo)
+  - [Example-Object detection](#example-object-detection)
+  - [Example-Automatic number-plate recognition](#example-automatic-number-plate-recognition)
+- [Config.json](#configjson)
+- [Unit Test](#unit-test)
+    - [Usage](#usage)
+- [FAQ](#faq)
+  - [Can't download and install tensorflow-2.4.1?](#cant-download-and-install-tensorflow-241)
+  - [Contribution](#contribution)
+  - [License](#license)
+
 ![demo](doc/fig/billboard.png)
+
 # Description
 dpu-sc presented a rapid demo which run AI inference on DPU with MPSoC.
 
 # Requirements
 ### Dependencies on platform
+- [EXMU-X261](https://github.com/InnoIPA/EXMU-X261-usermanual)
 - Xilinx [KV260](https://www.xilinx.com/products/som/kria/kv260-vision-starter-kit.html)
   - Opencv
   - XIR
   - VART
-  - Vitis-AI 1.4
+  - Vitis-AI 2.5
+
 
 ### Python's requirements
 ```bash
@@ -27,89 +48,88 @@ sudo python3 -m pip install tensorflow==2.4.1 -f https://tf.kmtea.eu/whl/stable.
 
 # How to use dpusc
 We provide three modes for AI sample:
-1. customcnn: Default CNN model. For inference cats and dogs. In dpu-sc, you can add argument `-x cnn` to use it.
-2. yolov3-voc: Default YOLO model. For inference some common objects. In dpu-sc, you can add argument `-x yolo` to use it.
-3. License Plate Recognition(LPR): We supported taiwain plate license detection and recognition. Please replace the model path to `models/obj/yolov4_tiny_416_carplate_0606.xmodel` and anchor to `18,13,28,21,32,25,36,28,41,32,67,48` and classes `CarPlate`in config.json. You can add argument `-x yolo -lpr` to use it.
+1. Cifar10 Resnet18 DEMO: Default Resnet18 model. For inference Resnet18 by Cifar10 dataset
+2. Object detection: Default YOLO model. For inference some common objects. 
+3. Automatic number-plate recognition(ANPR): We supported Taiwain plate license detection and recognition. 
 
-> Notice: Our models were built for DPU4096, if you want to use DPU3136 or others DPU config, please contact our PM James(james_chen@innodisk.com). Also, we supported Vitis-AI 1.4 now.
+> Notice: Our models were built for DPU3136, if you want to use DPU4096 or others DPU config, please contact our PM James(james_chen@innodisk.com). Also, we supported Vitis-AI 2.5 now.
 
-and if you want to change model, you can modify model path in config.json.
+
+
+## Example
+> Note: The CNNs in the old version of DPUSC are no longer supported after BSP version 1.2.2(Vitis-AI 2.5).
+
+To use this program, first clone the repo. Then, run the following code in a terminal window. The program will launch in the window.
 ```bash 
-python3 dpusc -i <path-to-image>        -x <xmodel-type>  -t <output-type>
-              -v <path-to-video>
-              -c <webcam device nodes>
+# Start to run code
+python3 dpusc 
 ```
-## Example - CNN
-```bash 
-# Inference with image, output image, using CNN
-python3 dpusc -i dataset/images/dog.jpg -x cnn -t image
-```
-After execute above command(use CNN xmodel), you will get the result and the output image like below:
-![cnn-result-01](doc/fig/cnn-result-01.png)
+As you can see, the code has successfully executed. Here is a screenshot of the output.
+
+To select the application you want to use, you will be presented with a list of options.
+
+![dpusc-app](doc/fig/dpusc-app.png)
+
+ Next, select your input source.
+
+![dpusc-source](doc/fig/dpusc-source.png)
+
+ Next, enter the location of your input source.
+
+![dpusc-input](doc/fig/dpusc-input.png)
+
+ Finally, select the format to save the output results in. The output format must be the same as the input format, except for DP.
+
+
+![dpusc-output](doc/fig/dpusc-output.png)
+
+## Example-Cifar10 Resnet18 DEMO
+
+> Now only support IMAGE mode
+
+After selecting the first application "Cifar10_Resnet18_DEMO" and choosing the input and output formats, you will get the following results and find the output file in the folder.
+
 ![cnn-result-02](doc/fig/cnn-result-02.png)
 
-## Example - YOLO
-```bash   
-# Inference with image, output DP, using yolo
-python3 dpusc -i dataset/images/moto.jpg -x yolo -t dp
-```
-After execute above command(use YOLO xmodel), you will get the result and the output image like below:
+
+## Example-Object detection
+
+After selecting the second application "Object detection" and choosing the input and output formats, you will get the following results and find the output file in the folder in the format you selected. 
+
+Additionally, during inference, you can view inference information, including bounding boxes and FPS, in the terminal window.
+
 ![yolo-result-01](doc/fig/yolo-result-01.png)
 ![yolo-result-02](doc/fig/yolo-result-02.png)
 
 
-## Example - LPR
-```bash   
-# Inference with image, output image, using LPR
-python3 dpusc -i dataset/images/lpr-2.jpg -x yolo -lpr -t image
-```
-After execute above command(use LPR mode), you will get the result and the output image like below:
+## Example-Automatic number-plate recognition
+
+After selecting the third application "Automatic number-plate recognition" and choosing the input and output formats, you will get the following results and find the output file in the folder in the format you selected. 
+
+Additionally, during inference, you can view inference information, including bounding boxes, FPS, and license plate detection results, in the terminal window.
+
 ![lpr-result-01](doc/fig/lpr-result-01.png)
 ![lpr-result-02](doc/fig/lpr-result-02.png)
 
-## Other Options
-```bash 
-# Inference with video, output image, using yolo
-python3 dpusc -v dataset/videos/walking_humans.nv12.1920x1080.h264 -x yolo -t image
 
-# Inference with video, output video, using yolo
-python3 dpusc -v dataset/videos/walking_humans.nv12.1920x1080.h264 -x yolo -t video
-
-# Inference with webcam, output DP, using yolo
-python3 dpusc -c 0 -x yolo -t dp
-
-# Inference with webcam, output image, using yolo
-python3 dpusc -c 0 -x yolo -t image
-
-# Inference with video, output DP, using LPR
-python3 dpusc -v <video path> -x yolo -lpr -t dp
-
-# Inference with video, output Video, using LPR
-python3 dpusc -v <video path> -x yolo -lpr -t video
-
-```
-
-# Dataset rules
-### If run with CNN, you must follow the format of dataset naming rule which is label on the prefix of file name.  
-e.g.   
-  - at images_demo we detect cat or dog.  
-  - at images_usb we detect perfect or defect.  
-  
-and so on.  
 
 # Config.json
-Xmodel and environment settings are in `config.json`.
+Previously, users had to manually modify the config.json file to switch applications. However, in this version update, we have integrated config.json directly into DPUSC. This will significantly reduce the learning curve for beginners. 
+
+But, if you want to try to modify the JSON content, you can still find relevant annotations in the table below.
 - DISPLAY
     ```json
     "DISPLAY": {
         "WIDTH": "1920",
-        "HEIGHT": "1080"
+        "HEIGHT": "1080",
+        "DISPLAY_CARD_PATH": "/dev/dri/by-path/platform-fd4a0000.zynqmp-display-card"
     }
     ```
     |Key Name|Description|
     |:-|:-|
     |`WIDTH`|The width of your display resolution.|
     |`HEIGHT`|The height of your display resolution.|
+    |`DISPLAY_CARD_PATH`|The path of your display card location.|
 
 - MODLES-XMODELS_CLASS
     ```json
@@ -179,8 +199,21 @@ Xmodel and environment settings are in `config.json`.
     |`VIDEO_OUTPUT`|The path of the output video.|
     |`IMAGE_OUT_DIR`|The path of the output image directory.|
 
-# Uint Test
+# Unit Test
 provide unittest script in [/unittest](https://github.com/aiotads/DPU_SC/tree/main/unittest).
+
+In this unit, you can test whether there are any projects that fail to run due to hardware problems.
+
+### Usage
+```bash
+./unittest.sh [TEST]
+
+[TEST]
+        dpu:  run the dpu unit test
+        util: run the utility unit test
+        yolo: run the yolo unit test
+        all:  run all off the dpu unit test
+```
 
 # FAQ
 ## Can't download and install tensorflow-2.4.1?
@@ -192,9 +225,17 @@ use our RPM package to install (please contact james_chen@innodisk.com).
     ```
     sudo wget https://github.com/KumaTea/tensorflow-aarch64/releases/download/v2.4/tensorflow-2.4.1-cp37-cp37m-linux_aarch64.whl
     ```
+    If the python version is 3.9.x. Please download by following command.
+    ```
+    sudo wget https://github.com/KumaTea/tensorflow-aarch64/releases/download/v2.4/tensorflow-2.4.1-cp39-cp39-linux_aarch64.whl
+    ```
 2. Install the `tensorflow.whl` without any dependencies.
     ```
     sudo pip3 install --no-dependencies tensorflow-2.4.1-cp37-cp37m-linux_aarch64.whl
+    ```
+    If the python version is 3.9.x. Please install by following command.
+    ```
+    sudo pip3 install --no-dependencies tensorflow-2.4.1-cp39-cp39-linux_aarch64.whl
     ```
 3. After install `tensorflow`, follow the instructions below to manually install dependencies which we need.
    

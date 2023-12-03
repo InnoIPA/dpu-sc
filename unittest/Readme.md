@@ -13,6 +13,5 @@
         dpu:  run the dpu unit test
         util: run the utility unit test
         yolo: run the yolo unit test
-        cnn:  run the cnn unit test
         all:  run all off the dpu unit test
 ```
